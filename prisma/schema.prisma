@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id            String     @id @default(uuid())
+  email         String     @unique
+  name          String
+  criado_em     DateTime   @default(now())
+  atualizado_em DateTime   @updatedAt
+  carrinho      carrinho[] @relation("user")
+
+  @@map("tb_usuario")
+}
+
+model products {
+  id            Int      @id @default(autoincrement())
+  nome          String
+  descricao     String
+  categoria     Int
+  url_imagens   String
+  criado_em     DateTime @default(now())
+  atualizado_em DateTime @updatedAt
+
+  @@map("tb_produto")
+}
+
+model categoria {
+  id           Int      @id @default(autoincrement())
+  nome         String
+  creado_em    DateTime @default(now())
+  atualiado_em DateTime @updatedAt
+
+  @@map("tb_categoria")
+}
+
+model carrinho {
+  id Int @id @default(autoincrement())
+  usuario       user     @relation("user", fields: [usuario_id], references: [id])
+  usuario_id    String
+  produtos      String
+  criado_em     DateTime @default(now())
+  atualizado_em DateTime @updatedAt
+
+  @@map("tb_carrinho")
+}
